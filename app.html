@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Estoque - Construção Civil</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --background: 210 20% 98%;
+            --foreground: 222 47% 11%;
+            --card: 0 0% 100%;
+            --card-foreground: 222 47% 11%;
+            --primary: 25 95% 53%;
+            --primary-foreground: 0 0% 100%;
+            --primary-glow: 25 95% 65%;
+            --secondary: 210 40% 96%;
+            --secondary-foreground: 222 47% 11%;
+            --muted: 210 40% 96%;
+            --muted-foreground: 215 16% 47%;
+            --accent: 210 40% 96%;
+            --accent-foreground: 222 47% 11%;
+            --destructive: 0 84% 60%;
+            --destructive-foreground: 0 0% 98%;
+            --success: 142 71% 45%;
+            --success-foreground: 0 0% 100%;
+            --warning: 38 92% 50%;
+            --warning-foreground: 0 0% 100%;
+            --border: 214 32% 91%;
+            --input: 214 32% 91%;
+            --ring: 25 95% 53%;
+            --radius: 0.5rem;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: hsl(var(--background));
+            color: hsl(var(--foreground));
+            line-height: 1.5;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Header */
+        header {
+            background: hsl(var(--card));
+            border-bottom: 1px solid hsl(var(--border));
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .header-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: hsl(var(--foreground));
+        }
+
+        .header-subtitle {
+            font-size: 0.75rem;
+            color: hsl(var(--muted-foreground));
+            margin-top: 0.125rem;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: var(--radius);
+            background: transparent;
+            color: hsl(var(--muted-foreground));
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: hsl(var(--accent));
+        }
+
+        .nav-btn.active {
+            background: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+        }
+
+        .nav-btn svg {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        /* Button */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: var(--radius);
+            background: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn svg {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: calc(var(--radius) + 2px);
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .stat-card-content {
+            flex: 1;
+        }
+
+        .stat-card-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .stat-card-value {
+            font-size: 1.875rem;
+            font-weight: bold;
+            color: hsl(var(--foreground));
+            margin-top: 0.5rem;
+        }
+
+        .stat-card-icon {
+            background: hsl(var(--primary) / 0.1);
+            border-radius: var(--radius);
+            padding: 0.75rem;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover .stat-card-icon {
+            transform: scale(1.1);
+        }
+
+        .stat-card-icon svg {
+            width: 1.5rem;
+            height: 1.5rem;
+            color: hsl(var(--primary));
+        }
+
+        .stat-card-trend {
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .trend-value {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .trend-up {
+            color: hsl(var(--success));
+        }
+
+        .trend-down {
+            color: hsl(var(--muted-foreground));
+        }
+
+        .trend-label {
+            font-size: 0.75rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Card */
+        .card {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: calc(var(--radius) + 2px);
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: hsl(var(--foreground));
+        }
+
+        .card-header svg {
+            width: 1.25rem;
+            height: 1.25rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        /* Material Item */
+        .material-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            background: hsl(var(--muted) / 0.3);
+            margin-bottom: 1rem;
+            transition: background 0.2s;
+        }
+
+        .material-item:hover {
+            background: hsl(var(--muted) / 0.5);
+        }
+
+        .material-info h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: hsl(var(--foreground));
+            margin-bottom: 0.25rem;
+        }
+
+        .material-info p {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .material-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.75rem;
+        }
+
+        .badge-success {
+            background: hsl(var(--success));
+            color: hsl(var(--success-foreground));
+        }
+
+        .badge-warning {
+            background: hsl(var(--warning));
+            color: hsl(var(--warning-foreground));
+        }
+
+        .badge-danger {
+            background: hsl(var(--destructive));
+            color: hsl(var(--destructive-foreground));
+        }
+
+        /* Transaction Item */
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid hsl(var(--border));
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .transaction-icon {
+            background: hsl(var(--muted));
+            border-radius: var(--radius);
+            padding: 0.5rem;
+        }
+
+        .transaction-icon svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .transaction-icon.entrada svg {
+            color: hsl(var(--success));
+        }
+
+        .transaction-icon.saida svg {
+            color: hsl(var(--destructive));
+        }
+
+        .transaction-details h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: hsl(var(--foreground));
+            margin-bottom: 0.125rem;
+        }
+
+        .transaction-details p {
+            font-size: 0.75rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .transaction-right {
+            text-align: right;
+        }
+
+        .transaction-time {
+            font-size: 0.75rem;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 0.25rem;
+        }
+
+        .transaction-user {
+            font-size: 0.75rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .page-header h2 {
+            font-size: 1.875rem;
+            font-weight: bold;
+            color: hsl(var(--foreground));
+        }
+
+        .page-header p {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            margin-top: 0.25rem;
+        }
+
+        /* Input */
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-wrapper svg {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1rem;
+            height: 1rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        input {
+            width: 100%;
+            padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            background: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-size: 0.875rem;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: hsl(var(--ring));
+            box-shadow: 0 0 0 2px hsl(var(--ring) / 0.2);
+        }
+
+        /* Table */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: hsl(var(--muted-foreground));
+            border-bottom: 1px solid hsl(var(--border));
+        }
+
+        th.text-right {
+            text-align: right;
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            border-bottom: 1px solid hsl(var(--border));
+        }
+
+        td.text-right {
+            text-align: right;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: hsl(var(--muted) / 0.3);
+        }
+
+        .code {
+            font-family: monospace;
+            font-size: 0.75rem;
+        }
+
+        .font-medium {
+            font-weight: 500;
+        }
+
+        .font-semibold {
+            font-weight: 600;
+        }
+
+        /* Tabs */
+        .tabs {
+            margin-bottom: 1.5rem;
+        }
+
+        .tabs-list {
+            display: flex;
+            gap: 0.25rem;
+            border-bottom: 1px solid hsl(var(--border));
+            margin-bottom: 1rem;
+        }
+
+        .tab-trigger {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            color: hsl(var(--muted-foreground));
+            cursor: pointer;
+            font-size: 0.875rem;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-trigger:hover {
+            color: hsl(var(--foreground));
+        }
+
+        .tab-trigger.active {
+            color: hsl(var(--foreground));
+            border-bottom-color: hsl(var(--primary));
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .trend-icon {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .trend-icon.up {
+            color: hsl(var(--success));
+        }
+
+        .trend-icon.down {
+            color: hsl(var(--destructive));
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="header-top">
+                <div>
+                    <h1>Gestão de Estoque</h1>
+                    <p class="header-subtitle">Controle completo do seu inventário</p>
+                </div>
+                <button class="btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                    </svg>
+                    Escanear QR Code
+                </button>
+            </div>
+
+            <nav>
+                <button class="nav-btn active" data-page="dashboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    Dashboard
+                </button>
+                <button class="nav-btn" data-page="materials">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                    Materiais
+                </button>
+                <button class="nav-btn" data-page="movements">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                    </svg>
+                    Movimentações
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- DASHBOARD PAGE -->
+        <div id="page-dashboard" class="page">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-content">
+                            <p class="stat-card-title">Valor Total do Estoque</p>
+                            <p class="stat-card-value">R$ 347.850,00</p>
+                        </div>
+                        <div class="stat-card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card-trend">
+                        <span class="trend-value trend-up">+12.5%</span>
+                        <span class="trend-label">vs. mês anterior</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-content">
+                            <p class="stat-card-title">Materiais em Estoque</p>
+                            <p class="stat-card-value">2.847</p>
+                        </div>
+                        <div class="stat-card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card-trend">
+                        <span class="trend-value trend-up">+5.2%</span>
+                        <span class="trend-label">vs. mês anterior</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-content">
+                            <p class="stat-card-title">Itens em Baixa</p>
+                            <p class="stat-card-value">12</p>
+                        </div>
+                        <div class="stat-card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card-trend">
+                        <span class="trend-value trend-down">-3 esta semana</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Materiais</h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                    </div>
+
+                    <div>
+                        <div class="material-item">
+                            <div class="material-info">
+                                <h3>
+                                    Cimento CP-II
+                                    <span class="badge badge-success">Em estoque</span>
+                                </h3>
+                                <p>450 sacos • R$ 31.500</p>
+                            </div>
+                            <div class="material-trend">
+                                <svg class="trend-icon up" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                </svg>
+                                <span class="trend-up font-medium">+5.2%</span>
+                            </div>
+                        </div>
+
+                        <div class="material-item">
+                            <div class="material-info">
+                                <h3>
+                                    Areia Média
+                                    <span class="badge badge-warning">Médio</span>
+                                </h3>
+                                <p>38 m³ • R$ 4.560</p>
+                            </div>
+                            <div class="material-trend">
+                                <svg class="trend-icon down" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+                                </svg>
+                                <span class="trend-down font-medium">-2.1%</span>
+                            </div>
+                        </div>
+
+                        <div class="material-item">
+                            <div class="material-info">
+                                <h3>
+                                    Tijolo 6 Furos
+                                    <span class="badge badge-success">Em estoque</span>
+                                </h3>
+                                <p>8.500 un • R$ 12.750</p>
+                            </div>
+                            <div class="material-trend">
+                                <svg class="trend-icon up" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                </svg>
+                                <span class="trend-up font-medium">+8.4%</span>
+                            </div>
+                        </div>
+
+                        <div class="material-item">
+                            <div class="material-info">
+                                <h3>
+                                    Vergalhão 10mm
+                                    <span class="badge badge-danger">Baixo</span>
+                                </h3>
+                                <p>52 barras • R$ 3.640</p>
+                            </div>
+                            <div class="material-trend">
+                                <svg class="trend-icon down" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+                                </svg>
+                                <span class="trend-down font-medium">-15.3%</span>
+                            </div>
+                        </div>
+
+                        <div class="material-item">
+                            <div class="material-info">
+                                <h3>
+                                    Tinta Látex Branca
+                                    <span class="badge badge-danger">Baixo</span>
+                                </h3>
+                                <p>18 latas • R$ 2.160</p>
+                            </div>
+                            <div class="material-trend">
+                                <svg class="trend-icon down" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+                                </svg>
+                                <span class="trend-down font-medium">-8.7%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Movimentações Recentes</h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+
+                    <div>
+                        <div class="transaction-item">
+                            <div class="transaction-left">
+                                <div class="transaction-icon entrada">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                                    </svg>
+                                </div>
+                                <div class="transaction-details">
+                                    <h4>Cimento CP-II</h4>
+                                    <p><span class="badge badge-success">Entrada</span> • 50 sacos</p>
+                                </div>
+                            </div>
+                            <div class="transaction-right">
+                                <p class="transaction-time">Há 2 horas</p>
+                                <p class="transaction-user">João Silva</p>
+                            </div>
+                        </div>
+
+                        <div class="transaction-item">
+                            <div class="transaction-left">
+                                <div class="transaction-icon saida">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                                    </svg>
+                                </div>
+                                <div class="transaction-details">
+                                    <h4>Areia Média</h4>
+                                    <p><span class="badge badge-danger">Saída</span> • 12 m³</p>
+                                </div>
+                            </div>
+                            <div class="transaction-right">
+                                <p class="transaction-time">Há 5 horas</p>
+                                <p class="transaction-user">Maria Santos</p>
+                            </div>
+                        </div>
+
+                        <div class="transaction-item">
+                            <div class="transaction-left">
+                                <div class="transaction-icon entrada">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                                    </svg>
+                                </div>
+                                <div class="transaction-details">
+                                    <h4>Tijolo 6 Furos</h4>
+                                    <p><span class="badge badge-success">Entrada</span> • 2.000 un</p>
+                                </div>
+                            </div>
+                            <div class="transaction-right">
+                                <p class="transaction-time">Ontem</p>
+                                <p class="transaction-user">Pedro Costa</p>
+                            </div>
+                        </div>
+
+                        <div class="transaction-item">
+                            <div class="transaction-left">
+                                <div class="transaction-icon saida">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                                    </svg>
+                                </div>
+                                <div class="transaction-details">
+                                    <h4>Vergalhão 10mm</h4>
+                                    <p><span class="badge badge-danger">Saída</span> • 25 barras</p>
+                                </div>
+                            </div>
+                            <div class="transaction-right">
+                                <p class="transaction-time">Há 2 dias</p>
+                                <p class="transaction-user">Ana Lima</p>
+                            </div>
+                        </div>
+
+                        <div class="transaction-item">
+                            <div class="transaction-left">
+                                <div class="transaction-icon entrada">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                                    </svg>
+                                </div>
+                                <div class="transaction-details">
+                                    <h4>Tinta Látex</h4>
+                                    <p><span class="badge badge-success">Entrada</span> • 30 latas</p>
+                                </div>
+                            </div>
+                            <div class="transaction-right">
+                                <p class="transaction-time">Há 3 dias</p>
+                                <p class="transaction-user">Carlos Mendes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MATERIALS PAGE -->
+        <div id="page-materials" class="page hidden">
+            <div class="page-header">
+                <div>
+                    <h2>Materiais em Estoque</h2>
+                    <p>Gerencie todos os materiais do seu inventário</p>
+                </div>
+                <button class="btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Adicionar Material
+                </button>
+            </div>
+
+            <div class="input-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input type="text" placeholder="Buscar materiais por nome ou código...">
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Lista de Materiais</h2>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Material</th>
+                                <th>Categoria</th>
+                                <th class="text-right">Quantidade</th>
+                                <th class="text-right">Valor Unit.</th>
+                                <th class="text-right">Valor Total</th>
+                                <th>Status</th>
+                                <th>Tendência</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="code">CIM-001</td>
+                                <td class="font-medium">Cimento CP-II</td>
+                                <td>Materiais Básicos</td>
+                                <td class="text-right">450 sacos</td>
+                                <td class="text-right">R$ 35.00</td>
+                                <td class="text-right font-semibold">R$ 15.750,00</td>
+                                <td><span class="badge badge-success">Alto</span></td>
+                                <td>
+                                    <svg class="trend-icon up" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                    </svg>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="code">ARE-001</td>
+                                <td class="font-medium">Areia Média</td>
+                                <td>Agregados</td>
+                                <td class="text-right">25 m³</td>
+                                <td class="text-right">R$ 85.00</td>
+                                <td class="text-right font-semibold">R$ 2.125,00</td>
+                                <td><span class="badge badge-warning">Médio</span></td>
+                                <td>
+                                    <svg class="trend-icon down" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+                                    </svg>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="code">TIJ-001</td>
+                                <td class="font-medium">Tijolo Cerâmico</td>
+                                <td>Alvenaria</td>
+                                <td class="text-right">8.500 unid</td>
+                                <td class="text-right">R$ 0.85</td>
+                                <td class="text-right font-semibold">R$ 7.225,00</td>
+                                <td><span class="badge badge-success">Alto</span></td>
+                                <td>
+                                    <svg class="trend-icon up" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                    </svg>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="code">BRI-001</td>
+                                <td class="font-medium">Brita 1</td>
+                                <td>Agregados</td>
+                                <td class="text-right">8 m³</td>
+                                <td class="text-right">R$ 95.00</td>
+                                <td class="text-right font-semibold">R$ 760,00</td>
+                                <td><span class="badge badge-danger">Baixo</span></td>
+                                <td>
+                                    <svg class="trend-icon down" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+                                    </svg>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="code">VER-010</td>
+                                <td class="font-medium">Vergalhão 10mm</td>
+                                <td>Ferragens</td>
+                                <td class="text-right">120 barras</td>
+                                <td class="text-right">R$ 45.00</td>
+                                <td class="text-right font-semibold">R$ 5.400,00</td>
+                                <td><span class="badge badge-warning">Médio</span></td>
+                                <td>
+                                    <svg class="trend-icon up" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                    </svg>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- MOVEMENTS PAGE -->
+        <div id="page-movements" class="page hidden">
+            <div class="page-header">
+                <div>
+                    <h2>Movimentações de Estoque</h2>
+                    <p>Histórico completo de entradas e saídas de materiais</p>
+                </div>
+                <button class="btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Nova Movimentação
+                </button>
+            </div>
+
+            <div class="input-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input type="text" placeholder="Buscar movimentações por material, código ou usuário...">
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Histórico de Movimentações</h2>
+                </div>
+
+                <div class="tabs">
+                    <div class="tabs-list">
+                        <button class="tab-trigger active" data-tab="all">Todas</button>
+                        <button class="tab-trigger" data-tab="entrada">Entradas</button>
+                        <button class="tab-trigger" data-tab="saida">Saídas</button>
+                    </div>
+
+                    <div class="tab-content active" id="tab-all">
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Tipo</th>
+                                        <th>Código</th>
+                                        <th>Material</th>
+                                        <th class="text-right">Quantidade</th>
+                                        <th>Data/Hora</th>
+                                        <th>Usuário</th>
+                                        <th>Observação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <svg class="trend-icon up" style="width: 1rem; height: 1rem;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                                </svg>
+                                                <span class="badge badge-success">Entrada</span>
+                                            </div>
+                                        </td>
+                                        <td class="code">CIM-001</td>
+                                        <td class="font-medium">Cimento CP-II</td>
+                                        <td class="text-right">100 sacos</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">2024-01-15 14:30</td>
+                                        <td>João Silva</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">Fornecedor: Construmax</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <svg class="trend-icon down" style="width: 1rem; height: 1rem;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                                                </svg>
+                                                <span class="badge badge-danger">Saída</span>
+                                            </div>
+                                        </td>
+                                        <td class="code">ARE-001</td>
+                                        <td class="font-medium">Areia Média</td>
+                                        <td class="text-right">5 m³</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">2024-01-15 11:20</td>
+                                        <td>Maria Santos</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">Obra: Edifício Residencial</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <svg class="trend-icon up" style="width: 1rem; height: 1rem;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                                </svg>
+                                                <span class="badge badge-success">Entrada</span>
+                                            </div>
+                                        </td>
+                                        <td class="code">TIJ-001</td>
+                                        <td class="font-medium">Tijolo Cerâmico</td>
+                                        <td class="text-right">2.000 unid</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">2024-01-14 16:45</td>
+                                        <td>Pedro Costa</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">Fornecedor: Cerâmica SP</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <svg class="trend-icon down" style="width: 1rem; height: 1rem;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                                                </svg>
+                                                <span class="badge badge-danger">Saída</span>
+                                            </div>
+                                        </td>
+                                        <td class="code">BRI-001</td>
+                                        <td class="font-medium">Brita 1</td>
+                                        <td class="text-right">3 m³</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">2024-01-14 09:15</td>
+                                        <td>Ana Lima</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">Obra: Fundação Casa 45</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <svg class="trend-icon up" style="width: 1rem; height: 1rem;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                                </svg>
+                                                <span class="badge badge-success">Entrada</span>
+                                            </div>
+                                        </td>
+                                        <td class="code">VER-010</td>
+                                        <td class="font-medium">Vergalhão 10mm</td>
+                                        <td class="text-right">50 barras</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">2024-01-13 13:00</td>
+                                        <td>Carlos Mendes</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">Fornecedor: Aço Brasil</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <svg class="trend-icon down" style="width: 1rem; height: 1rem;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                                                </svg>
+                                                <span class="badge badge-danger">Saída</span>
+                                            </div>
+                                        </td>
+                                        <td class="code">CIM-001</td>
+                                        <td class="font-medium">Cimento CP-II</td>
+                                        <td class="text-right">25 sacos</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">2024-01-13 10:30</td>
+                                        <td>João Silva</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">Obra: Reforma Comercial</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="tab-entrada">
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Tipo</th>
+                                        <th>Código</th>
+                                        <th>Material</th>
+                                        <th class="text-right">Quantidade</th>
+                                        <th>Data/Hora</th>
+                                        <th>Usuário</th>
+                                        <th>Observação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <svg class="trend-icon up" style="width: 1rem; height: 1rem;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                                </svg>
+                                                <span class="badge badge-success">Entrada</span>
+                                            </div>
+                                        </td>
+                                        <td class="code">CIM-001</td>
+                                        <td class="font-medium">Cimento CP-II</td>
+                                        <td class="text-right">100 sacos</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">2024-01-15 14:30</td>
+                                        <td>João Silva</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">Fornecedor: Construmax</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <svg class="trend-icon up" style="width: 1rem; height: 1rem;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                                </svg>
+                                                <span class="badge badge-success">Entrada</span>
+                                            </div>
+                                        </td>
+                                        <td class="code">TIJ-001</td>
+                                        <td class="font-medium">Tijolo Cerâmico</td>
+                                        <td class="text-right">2.000 unid</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">2024-01-14 16:45</td>
+                                        <td>Pedro Costa</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">Fornecedor: Cerâmica SP</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <svg class="trend-icon up" style="width: 1rem; height: 1rem;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                                </svg>
+                                                <span class="badge badge-success">Entrada</span>
+                                            </div>
+                                        </td>
+                                        <td class="code">VER-010</td>
+                                        <td class="font-medium">Vergalhão 10mm</td>
+                                        <td class="text-right">50 barras</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">2024-01-13 13:00</td>
+                                        <td>Carlos Mendes</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">Fornecedor: Aço Brasil</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="tab-saida">
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Tipo</th>
+                                        <th>Código</th>
+                                        <th>Material</th>
+                                        <th class="text-right">Quantidade</th>
+                                        <th>Data/Hora</th>
+                                        <th>Usuário</th>
+                                        <th>Observação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <svg class="trend-icon down" style="width: 1rem; height: 1rem;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                                                </svg>
+                                                <span class="badge badge-danger">Saída</span>
+                                            </div>
+                                        </td>
+                                        <td class="code">ARE-001</td>
+                                        <td class="font-medium">Areia Média</td>
+                                        <td class="text-right">5 m³</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">2024-01-15 11:20</td>
+                                        <td>Maria Santos</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">Obra: Edifício Residencial</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <svg class="trend-icon down" style="width: 1rem; height: 1rem;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                                                </svg>
+                                                <span class="badge badge-danger">Saída</span>
+                                            </div>
+                                        </td>
+                                        <td class="code">BRI-001</td>
+                                        <td class="font-medium">Brita 1</td>
+                                        <td class="text-right">3 m³</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">2024-01-14 09:15</td>
+                                        <td>Ana Lima</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">Obra: Fundação Casa 45</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <svg class="trend-icon down" style="width: 1rem; height: 1rem;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                                                </svg>
+                                                <span class="badge badge-danger">Saída</span>
+                                            </div>
+                                        </td>
+                                        <td class="code">CIM-001</td>
+                                        <td class="font-medium">Cimento CP-II</td>
+                                        <td class="text-right">25 sacos</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">2024-01-13 10:30</td>
+                                        <td>João Silva</td>
+                                        <td style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">Obra: Reforma Comercial</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Navigation
+        const navButtons = document.querySelectorAll('.nav-btn');
+        const pages = document.querySelectorAll('.page');
+
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetPage = button.getAttribute('data-page');
+                
+                // Update active nav button
+                navButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Show target page
+                pages.forEach(page => {
+                    if (page.id === `page-${targetPage}`) {
+                        page.classList.remove('hidden');
+                    } else {
+                        page.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        // Tabs functionality
+        const tabTriggers = document.querySelectorAll('.tab-trigger');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabTriggers.forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                const targetTab = trigger.getAttribute('data-tab');
+                
+                // Update active tab trigger
+                tabTriggers.forEach(t => t.classList.remove('active'));
+                trigger.classList.add('active');
+                
+                // Show target tab content
+                tabContents.forEach(content => {
+                    if (content.id === `tab-${targetTab}`) {
+                        content.classList.add('active');
+                    } else {
+                        content.classList.remove('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
