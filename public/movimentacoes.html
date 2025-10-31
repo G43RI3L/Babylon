@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movimentações - Gestão de Estoque</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body{margin:0;font-family:system-ui,-apple-system,sans-serif}
+        .card{background:#fff;border-radius:8px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
+        .btn{padding:10px 16px;border-radius:6px;font-weight:500;cursor:pointer;border:none;transition:all .2s}
+        .btn-primary{background:#2563eb;color:#fff}.btn-primary:hover{background:#1d4ed8}
+        .btn-ghost{background:transparent;color:#64748b}.btn-ghost:hover{background:#f1f5f9}
+        .nav-active{background:#2563eb;color:#fff}
+        .tab{padding:10px 20px;background:transparent;border:none;cursor:pointer;border-bottom:2px solid transparent}
+        .tab-active{border-bottom-color:#2563eb;color:#2563eb;font-weight:600}
+        table{width:100%;border-collapse:collapse}
+        th,td{padding:12px;text-left;border-bottom:1px solid #e2e8f0}
+        th{font-weight:600;color:#475569}
+        .badge{display:inline-block;padding:4px 8px;border-radius:4px;font-size:12px;font-weight:500}
+        .badge-success{background:#dcfce7;color:#166534}
+        .badge-error{background:#fee2e2;color:#991b1b}
+        input{padding:10px;border:1px solid #e2e8f0;border-radius:6px;width:100%;max-width:400px}
+        .hidden{display:none}
+    </style>
+</head>
+<body class="bg-gray-50">
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Gestão de Estoque</h1>
+                    <p class="text-xs text-gray-500">Controle completo do seu inventário</p>
+                </div>
+                <button class="btn btn-primary">🔍 Escanear QR Code</button>
+            </div>
+            <nav class="flex gap-1 mt-4">
+                <a href="dashboard.html"><button class="btn btn-ghost">📊 Dashboard</button></a>
+                <a href="materiais.html"><button class="btn btn-ghost">📦 Materiais</button></a>
+                <a href="movimentacoes.html"><button class="btn nav-active">🔄 Movimentações</button></a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900">Movimentações</h2>
+                <p class="text-sm text-gray-500">Histórico de entradas e saídas</p>
+            </div>
+            <button class="btn btn-primary">+ Nova Movimentação</button>
+        </div>
+
+        <div class="mb-6">
+            <input type="text" placeholder="🔍 Buscar movimentações..." onkeyup="filtrarMovimentacoes(this.value)">
+        </div>
+
+        <div class="card">
+            <div class="border-b border-gray-200 mb-4">
+                <button class="tab tab-active" onclick="mudarTab('todas')">Todas</button>
+                <button class="tab" onclick="mudarTab('entradas')">Entradas</button>
+                <button class="tab" onclick="mudarTab('saidas')">Saídas</button>
+            </div>
+
+            <table id="tabelaMovimentacoes">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Material</th>
+                        <th>Quantidade</th>
+                        <th>Usuário</th>
+                        <th>Data</th>
+                        <th>Observação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-tipo="entrada">
+                        <td><span class="badge badge-success">✅ Entrada</span></td>
+                        <td>Cimento Portland</td>
+                        <td>+200 sacos</td>
+                        <td>João Silva</td>
+                        <td>29/10/2025 14:30</td>
+                        <td>Compra fornecedor XYZ</td>
+                    </tr>
+                    <tr data-tipo="saida">
+                        <td><span class="badge badge-error">❌ Saída</span></td>
+                        <td>Areia Média</td>
+                        <td>-50 m³</td>
+                        <td>Maria Santos</td>
+                        <td>29/10/2025 11:15</td>
+                        <td>Obra Centro - Fase 2</td>
+                    </tr>
+                    <tr data-tipo="entrada">
+                        <td><span class="badge badge-success">✅ Entrada</span></td>
+                        <td>Brita 1</td>
+                        <td>+150 m³</td>
+                        <td>Carlos Mendes</td>
+                        <td>28/10/2025 16:45</td>
+                        <td>Reposição estoque</td>
+                    </tr>
+                    <tr data-tipo="saida">
+                        <td><span class="badge badge-error">❌ Saída</span></td>
+                        <td>Vergalhão 10mm</td>
+                        <td>-30 barras</td>
+                        <td>Ana Costa</td>
+                        <td>27/10/2025 09:20</td>
+                        <td>Obra Jardins - Fundação</td>
+                    </tr>
+                    <tr data-tipo="entrada">
+                        <td><span class="badge badge-success">✅ Entrada</span></td>
+                        <td>Tijolo Cerâmico</td>
+                        <td>+5000 un</td>
+                        <td>Pedro Oliveira</td>
+                        <td>26/10/2025 13:00</td>
+                        <td>Compra urgente</td>
+                    </tr>
+                    <tr data-tipo="saida">
+                        <td><span class="badge badge-error">❌ Saída</span></td>
+                        <td>Tinta Acrílica</td>
+                        <td>-25 latas</td>
+                        <td>Lucia Ferreira</td>
+                        <td>25/10/2025 10:30</td>
+                        <td>Obra Shopping - Acabamento</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        function mudarTab(tipo) {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(t => t.classList.remove('tab-active'));
+            event.target.classList.add('tab-active');
+
+            const linhas = document.querySelectorAll('#tabelaMovimentacoes tbody tr');
+            linhas.forEach(linha => {
+                if (tipo === 'todas') {
+                    linha.style.display = '';
+                } else {
+                    linha.style.display = linha.dataset.tipo === tipo ? '' : 'none';
+                }
+            });
+        }
+
+        function filtrarMovimentacoes(valor) {
+            const filtro = valor.toLowerCase();
+            const linhas = document.querySelectorAll('#tabelaMovimentacoes tbody tr');
+            linhas.forEach(linha => {
+                const texto = linha.textContent.toLowerCase();
+                linha.style.display = texto.includes(filtro) ? '' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>
