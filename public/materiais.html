@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materiais - Gestão de Estoque</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body{margin:0;font-family:system-ui,-apple-system,sans-serif}
+        .card{background:#fff;border-radius:8px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
+        .btn{padding:10px 16px;border-radius:6px;font-weight:500;cursor:pointer;border:none;transition:all .2s}
+        .btn-primary{background:#2563eb;color:#fff}.btn-primary:hover{background:#1d4ed8}
+        .btn-ghost{background:transparent;color:#64748b}.btn-ghost:hover{background:#f1f5f9}
+        .nav-active{background:#2563eb;color:#fff}
+        table{width:100%;border-collapse:collapse}
+        th,td{padding:12px;text-left;border-bottom:1px solid #e2e8f0}
+        th{font-weight:600;color:#475569}
+        .badge{display:inline-block;padding:4px 8px;border-radius:4px;font-size:12px;font-weight:500}
+        .badge-success{background:#dcfce7;color:#166534}
+        .badge-warning{background:#fef3c7;color:#92400e}
+        .badge-error{background:#fee2e2;color:#991b1b}
+        input{padding:10px;border:1px solid #e2e8f0;border-radius:6px;width:100%;max-width:400px}
+    </style>
+</head>
+<body class="bg-gray-50">
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Gestão de Estoque</h1>
+                    <p class="text-xs text-gray-500">Controle completo do seu inventário</p>
+                </div>
+                <button class="btn btn-primary">🔍 Escanear QR Code</button>
+            </div>
+            <nav class="flex gap-1 mt-4">
+                <a href="dashboard.html"><button class="btn btn-ghost">📊 Dashboard</button></a>
+                <a href="materiais.html"><button class="btn nav-active">📦 Materiais</button></a>
+                <a href="movimentacoes.html"><button class="btn btn-ghost">🔄 Movimentações</button></a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900">Materiais</h2>
+                <p class="text-sm text-gray-500">Gerencie seu inventário de materiais</p>
+            </div>
+            <button class="btn btn-primary">+ Adicionar Material</button>
+        </div>
+
+        <div class="mb-6">
+            <input type="text" placeholder="🔍 Buscar materiais..." onkeyup="filtrarTabela(this.value)">
+        </div>
+
+        <div class="card">
+            <table id="tabelaMateriais">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nome</th>
+                        <th>Categoria</th>
+                        <th>Quantidade</th>
+                        <th>Preço Unit.</th>
+                        <th>Valor Total</th>
+                        <th>Status</th>
+                        <th>Tendência</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>MAT001</td>
+                        <td>Cimento Portland CP II</td>
+                        <td>Construção</td>
+                        <td>450 sacos</td>
+                        <td>R$ 32,50</td>
+                        <td>R$ 14.625,00</td>
+                        <td><span class="badge badge-success">Alto</span></td>
+                        <td>📈</td>
+                    </tr>
+                    <tr>
+                        <td>MAT002</td>
+                        <td>Areia Média Lavada</td>
+                        <td>Construção</td>
+                        <td>280 m³</td>
+                        <td>R$ 85,00</td>
+                        <td>R$ 23.800,00</td>
+                        <td><span class="badge badge-warning">Médio</span></td>
+                        <td>📈</td>
+                    </tr>
+                    <tr>
+                        <td>MAT003</td>
+                        <td>Brita 1</td>
+                        <td>Construção</td>
+                        <td>180 m³</td>
+                        <td>R$ 75,00</td>
+                        <td>R$ 13.500,00</td>
+                        <td><span class="badge badge-warning">Médio</span></td>
+                        <td>📉</td>
+                    </tr>
+                    <tr>
+                        <td>MAT004</td>
+                        <td>Vergalhão 10mm CA-50</td>
+                        <td>Ferragens</td>
+                        <td>75 barras</td>
+                        <td>R$ 45,00</td>
+                        <td>R$ 3.375,00</td>
+                        <td><span class="badge badge-error">Baixo</span></td>
+                        <td>📉</td>
+                    </tr>
+                    <tr>
+                        <td>MAT005</td>
+                        <td>Tijolo Cerâmico 6 Furos</td>
+                        <td>Alvenaria</td>
+                        <td>8500 un</td>
+                        <td>R$ 0,85</td>
+                        <td>R$ 7.225,00</td>
+                        <td><span class="badge badge-success">Alto</span></td>
+                        <td>📈</td>
+                    </tr>
+                    <tr>
+                        <td>MAT006</td>
+                        <td>Tinta Acrílica Branca 18L</td>
+                        <td>Acabamento</td>
+                        <td>120 latas</td>
+                        <td>R$ 185,00</td>
+                        <td>R$ 22.200,00</td>
+                        <td><span class="badge badge-warning">Médio</span></td>
+                        <td>📈</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        function filtrarTabela(valor) {
+            const filtro = valor.toLowerCase();
+            const linhas = document.querySelectorAll('#tabelaMateriais tbody tr');
+            linhas.forEach(linha => {
+                const texto = linha.textContent.toLowerCase();
+                linha.style.display = texto.includes(filtro) ? '' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>
