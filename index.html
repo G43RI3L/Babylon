@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Estoque - Construção Civil</title>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="header-top">
+                <div>
+                    <h1>Gestão de Estoque</h1>
+                    <p class="header-subtitle">Controle completo do seu inventário</p>
+                </div>
+                <button class="btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                    </svg>
+                    Escanear QR Code
+                </button>
+            </div>
+
+            <nav>
+                <button class="nav-btn active" data-page="dashboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    Dashboard
+                </button>
+                <button class="nav-btn" data-page="materials">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                    Materiais
+                </button>
+                <button class="nav-btn" data-page="movements">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                    </svg>
+                    Movimentações
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div id="page-dashboard" class="page">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-content">
+                            <p class="stat-card-title">Valor Total do Estoque</p>
+                            <p class="stat-card-value">R$ 347.850,00</p>
+                        </div>
+                        <div class="stat-card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card-trend">
+                        <span class="trend-value trend-up">+12.5%</span>
+                        <span class="trend-label">vs. mês anterior</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-content">
+                            <p class="stat-card-title">Materiais em Estoque</p>
+                            <p class="stat-card-value">2.847</p>
+                        </div>
+                        <div class="stat-card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card-trend">
+                        <span class="trend-value trend-up">+5.2%</span>
+                        <span class="trend-label">vs. mês anterior</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-content">
+                            <p class="stat-card-title">Itens em Baixa</p>
+                            <p class="stat-card-value">12</p>
+                        </div>
+                        <div class="stat-card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card-trend">
+                        <span class="trend-value trend-down">-3 esta semana</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Materiais</h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="material-item">
+                            <div class="material-info">
+                                <h3>
+                                    Cimento CP-II
+                                    <span class="badge badge-success">Em estoque</span>
+                                </h3>
+                                <p>450 sacos • R$ 31.500</p>
+                            </div>
+                            <div class="material-trend">
+                                <svg class="trend-icon up" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                </svg>
+                                <span class="trend-up font-medium">+5.2%</span>
+                            </div>
+                        </div>
+                        <div class="material-item">
+                            <div class="material-info">
+                                <h3>
+                                    Areia Média
+                                    <span class="badge badge-warning">Médio</span>
+                                </h3>
+                                <p>38 m³ • R$ 4.560</p>
+                            </div>
+                            <div class="material-trend">
+                                <svg class="trend-icon down" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+                                </svg>
+                                <span class="trend-down font-medium">-2.1%</span>
+                            </div>
+                        </div>
+                        <div class="material-item">
+                            <div class="material-info">
+                                <h3>
+                                    Tijolo 6 Furos
+                                    <span class="badge badge-success">Em estoque</span>
+                                </h3>
+                                <p>8.500 un • R$ 12.750</p>
+                            </div>
+                            <div class="material-trend">
+                                <svg class="trend-icon up" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                </svg>
+                                <span class="trend-up font-medium">+8.4%</span>
+                            </div>
+                        </div>
+                        <div class="material-item">
+                            <div class="material-info">
+                                <h3>
+                                    Vergalhão 10mm
+                                    <span class="badge badge-danger">Baixo</span>
+                                </h3>
+                                <p>52 barras • R$ 3.640</p>
+                            </div>
+                            <div class="material-trend">
+                                <svg class="trend-icon down" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+                                </svg>
+                                <span class="trend-down font-medium">-15.3%</span>
+                            </div>
+                        </div>
+                        <div class="material-item">
+                            <div class="material-info">
+                                <h3>
+                                    Tinta Látex Branca
+                                    <span class="badge badge-danger">Baixo</span>
+                                </h3>
+                                <p>18 latas • R$ 2.160</p>
+                            </div>
+                            <div class="material-trend">
+                                <svg class="trend-icon down" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+                                </svg>
+                                <span class="trend-down font-medium">-8.7%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Movimentações Recentes</h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="transaction-item">
+                            <div class="transaction-left">
+                                <div class="transaction-icon entrada">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                                    </svg>
+                                </div>
+                                <div class="transaction-details">
+                                    <h4>Cimento CP-II</h4>
+                                    <p><span class="badge badge-success">Entrada</span> • 50 sacos</p>
+                                </div>
+                            </div>
+                            <div class="transaction-right">
+                                <p class="transaction-time">Há 2 horas</p>
+                                <p class="transaction-user">João Silva</p>
+                            </div>
+                        </div>
+                        <div class="transaction-item">
+                            <div class="transaction-left">
+                                <div class="transaction-icon saida">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                                    </svg>
+                                </div>
+                                <div class="transaction-details">
+                                    <h4>Areia Média</h4>
+                                    <p><span class="badge badge-danger">Saída</span> • 12 m³</p>
+                                </div>
+                            </div>
+                            <div class="transaction-right">
+                                <p class="transaction-time">Há 5 horas</p>
+                                <p class="transaction-user">Maria Santos</p>
+                            </div>
+                        </div>
+                        <div class="transaction-item">
+                            <div class="transaction-left">
+                                <div class="transaction-icon entrada">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                                    </svg>
+                                </div>
+                                <div class="transaction-details">
+                                    <h4>Tijolo 6 Furos</h4>
+                                    <p><span class="badge badge-success">Entrada</span> • 2.000 un</p>
+                                </div>
+                            </div>
+                            <div class="transaction-right">
+                                <p class="transaction-time">Ontem</p>
+                                <p class="transaction-user">Pedro Costa</p>
+                            </div>
+                        </div>
+                        <div class="transaction-item">
+                            <div class="transaction-left">
+                                <div class="transaction-icon saida">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                                    </svg>
+                                </div>
+                                <div class="transaction-details">
+                                    <h4>Vergalhão 10mm</h4>
+                                    <p><span class="badge badge-danger">Saída</span> • 25 barras</p>
+                                </div>
+                            </div>
+                            <div class="transaction-right">
+                                <p class="transaction-time">Há 2 dias</p>
+                                <p class="transaction-user">Ana Lima</p>
+                            </div>
+                        </div>
+                        <div class="transaction-item">
+                            <div class="transaction-left">
+                                <div class="transaction-icon entrada">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                                    </svg>
+                                </div>
+                                <div class="transaction-details">
+                                    <h4>Tinta Látex</h4>
+                                    <p><span class="badge badge-success">Entrada</span> • 30 latas</p>
+                                </div>
+                            </div>
+                            <div class="transaction-right">
+                                <p class="transaction-time">Há 3 dias</p>
+                                <p class="transaction-user">Carlos Mendes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-materials" class="page hidden">
+            <div class="page-header">
+                <div>
+                    <h2>Materiais em Estoque</h2>
+                    <p>Gerencie todos os materiais do seu inventário</p>
+                </div>
+                <button class="btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Adicionar Material
+                </button>
+            </div>
+
+            <div class="input-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input type="text" placeholder="Buscar material por nome ou código...">
+            </div>
+
+            <div class="card">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Material</th>
+                                <th>Código</th>
+                                <th>Status</th>
+                                <th class="text-right">Quantidade</th>
+                                <th class="text-right">Valor Unit.</th>
+                                <th class="text-right">Valor Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="font-semibold">Cimento CP-II</div>
+                                    <div class="code">Saco 50kg</div>
+                                </td>
+                                <td><span class="code">CIM-001</span></td>
+                                <td><span class="badge badge-success">Em estoque</span></td>
+                                <td class="text-right font-medium">450 sc</td>
+                                <td class="text-right">R$ 70,00</td>
+                                <td class="text-right font-semibold">R$ 31.500,00</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="font-semibold">Areia Média</div>
+                                    <div class="code">Metro cúbico</div>
+                                </td>
+                                <td><span class="code">ARE-002</span></td>
+                                <td><span class="badge badge-warning">Médio</span></td>
+                                <td class="text-right font-medium">38 m³</td>
+                                <td class="text-right">R$ 120,00</td>
+                                <td class="text-right font-semibold">R$ 4.560,00</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="font-semibold">Tijolo 6 Furos</div>
+                                    <div class="code">Unidade</div>
+                                </td>
+                                <td><span class="code">TIJ-001</span></td>
+                                <td><span class="badge badge-success">Em estoque</span></td>
+                                <td class="text-right font-medium">8.500 un</td>
+                                <td class="text-right">R$ 1,50</td>
+                                <td class="text-right font-semibold">R$ 12.750,00</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="font-semibold">Vergalhão 10mm</div>
+                                    <div class="code">Barra 12m</div>
+                                </td>
+                                <td><span class="code">VER-010</span></td>
+                                <td><span class="badge badge-danger">Baixo</span></td>
+                                <td class="text-right font-medium">52 barras</td>
+                                <td class="text-right">R$ 70,00</td>
+                                <td class="text-right font-semibold">R$ 3.640,00</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="font-semibold">Tinta Látex Branca</div>
+                                    <div class="code">Lata 18L</div>
+                                </td>
+                                <td><span class="code">TIN-003</span></td>
+                                <td><span class="badge badge-danger">Baixo</span></td>
+                                <td class="text-right font-medium">18 latas</td>
+                                <td class="text-right">R$ 120,00</td>
+                                <td class="text-right font-semibold">R$ 2.160,00</td>
+                            </tr>
+                             </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-movements" class="page hidden">
+            <div class="page-header">
+                <div>
+                    <h2>Movimentações de Estoque</h2>
+                    <p>Histórico completo de entradas e saídas de materiais</p>
+                </div>
+                <button class="btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Nova Movimentação
+                </button>
+            </div>
+             <div class="input-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input type="text" placeholder="Buscar por material, usuário ou data...">
+            </div>
+
+            <div class="card">
+                <div class="tabs">
+                    <div class="tabs-list">
+                        <button class="tab-trigger active" data-tab="all">Todas</button>
+                        <button class="tab-trigger" data-tab="entrada">Entradas</button>
+                        <button class="tab-trigger" data-tab="saida">Saídas</button>
+                    </div>
+
+                    <div id="tab-all" class="tab-content active">
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Tipo</th>
+                                        <th>Material</th>
+                                        <th class="text-right">Quantidade</th>
+                                        <th>Data</th>
+                                        <th>Usuário</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="badge badge-success">Entrada</span></td>
+                                        <td class="font-medium">Cimento CP-II</td>
+                                        <td class="text-right">+ 50 sacos</td>
+                                        <td>Hoje, 14:32</td>
+                                        <td>João Silva</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-danger">Saída</span></td>
+                                        <td class="font-medium">Areia Média</td>
+                                        <td class="text-right">- 12 m³</td>
+                                        <td>Hoje, 09:15</td>
+                                        <td>Maria Santos</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-success">Entrada</span></td>
+                                        <td class="font-medium">Tijolo 6 Furos</td>
+                                        <td class="text-right">+ 2.000 un</td>
+                                        <td>Ontem, 16:05</td>
+                                        <td>Pedro Costa</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-danger">Saída</span></td>
+                                        <td class="font-medium">Vergalhão 10mm</td>
+                                        <td class="text-right">- 25 barras</td>
+                                        <td>Há 2 dias</td>
+                                        <td>Ana Lima</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-success">Entrada</span></td>
+                                        <td class="font-medium">Tinta Látex</td>
+                                        <td class="text-right">+ 30 latas</td>
+                                        <td>Há 3 dias</td>
+                                        <td>Carlos Mendes</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div id="tab-entrada" class="tab-content">
+                         <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Material</th>
+                                        <th class="text-right">Quantidade</th>
+                                        <th>Data</th>
+                                        <th>Usuário</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="font-medium">Cimento CP-II</td>
+                                        <td class="text-right">+ 50 sacos</td>
+                                        <td>Hoje, 14:32</td>
+                                        <td>João Silva</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-medium">Tijolo 6 Furos</td>
+                                        <td class="text-right">+ 2.000 un</td>
+                                        <td>Ontem, 16:05</td>
+                                        <td>Pedro Costa</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-medium">Tinta Látex</td>
+                                        <td class="text-right">+ 30 latas</td>
+                                        <td>Há 3 dias</td>
+                                        <td>Carlos Mendes</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="tab-saida" class="tab-content">
+                         <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Material</th>
+                                        <th class="text-right">Quantidade</th>
+                                        <th>Data</th>
+                                        <th>Usuário</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="font-medium">Areia Média</td>
+                                        <td class="text-right">- 12 m³</td>
+                                        <td>Hoje, 09:15</td>
+                                        <td>Maria Santos</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-medium">Vergalhão 10mm</td>
+                                        <td class="text-right">- 25 barras</td>
+                                        <td>Há 2 dias</td>
+                                        <td>Ana Lima</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js" defer></script>
+</body>
+</html>
